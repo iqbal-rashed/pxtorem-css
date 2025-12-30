@@ -1,31 +1,72 @@
 {
-    "name": "pxtorem-css",
-    "version": "1.0.6",
-    "description": "A nodejs cli that convert css unit px to rem",
-    "main": "app.js",
-    "author": "Rashed Iqbal",
-    "license": "MIT",
-    "bin": {
-        "pxtorem": "./bin/pxtorem"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/iqbal-rashed/pxtorem-css"
-    },
-    "bugs": {
-        "url": "https://github.com/iqbal-rashed/pxtorem-css/issues"
-    },
-    "keywords": [
-        "pxtorem",
-        "css",
-        "unit",
-        "converter",
-        "px",
-        "rem"
-    ],
-    "dependencies": {
-        "chalk": "^4.1.2",
-        "commander": "^9.3.0",
-        "ora": "^5.4.1"
+  "name": "pxtorem-css",
+  "version": "2.0.1",
+  "description": "A PostCSS plugin and CLI tool that converts px to rem/em/vw/vh units",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "pxtorem": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run lint && npm run test && npm run build"
+  },
+  "keywords": [
+    "postcss",
+    "postcss-plugin",
+    "css",
+    "rem",
+    "em",
+    "vw",
+    "vh",
+    "pixel",
+    "px",
+    "pxtorem",
+    "converter",
+    "cli"
+  ],
+  "author": "Rashed Iqbal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iqbal-rashed/pxtorem-css"
+  },
+  "bugs": {
+    "url": "https://github.com/iqbal-rashed/pxtorem-css/issues"
+  },
+  "peerDependencies": {
+    "postcss": "^8.0.0"
+  },
+  "dependencies": {
+    "postcss": "^8.4.49"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2",
+    "vitest": "^2.1.8"
+  }
 }

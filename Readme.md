@@ -1,92 +1,314 @@
-# pxtorem-css
 
-### A nodejs cli that convert px to rem in any css file
+<h1 align="center">pxtorem-css</h1>
 
-<br>
+<p align="center">
+  <strong>A modern PostCSS plugin & CLI to convert px → rem, em, vw, vh and more</strong>
+</p>
+<p align="center">
+  <img src="https://img.shields.io/npm/v/pxtorem-css?style=flat-square&color=blue" alt="npm version" />
+  <img src="https://img.shields.io/npm/dm/pxtorem-css?style=flat-square&color=green" alt="downloads" />
+  <img src="https://img.shields.io/npm/l/pxtorem-css?style=flat-square" alt="license" />
+  <img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript" alt="typescript" />
+</p>
 
-## Description
+---
 
-pxtorem-css is a command line interface tool that converts pixel values to rem values in any CSS file. This tool is built using pure Node.js and comes with several advanced features to help you save time when writing CSS code.
+## ✨ Features
 
-Features:
+- 🎯 **Multiple Units** — Convert to `rem`, `em`, `vw`, `vh`, `vmin`, `vmax`, `%`
+- ⚡ **Fast & Lightweight** — Zero dependencies (except postcss)
+- 🔧 **Highly Configurable** — Per-property settings, custom transforms
+- 💬 **Comment Control** — Disable conversion with inline comments
+- 📊 **Conversion Reports** — Track what was converted
+- 🖥️ **CLI Included** — Convert files from command line
+- � **TypeScript** — Full type definitions included
 
--   Converts px to rem in CSS files quickly and easily
--   Allows you to choose the CSS directory and output directory
--   Enables you to include and exclude specific CSS files for conversion
--   Allows you to ignore specific CSS attributes that you don't want to convert
--   You can customize the tool's options with a pxtorem.config.json file in your project
--   Can be installed both locally and globally using npm/
+---
 
-## Installation
-
-Locally:
+## 📦 Installation
 
 ```bash
-npm i pxtorem-css
+# npm
+npm install pxtorem-css postcss --save-dev
+
+# yarn
+yarn add pxtorem-css postcss -D
+
+# pnpm
+pnpm add pxtorem-css postcss -D
 ```
 
-Globally:
+---
 
-```bash
-npm i -g pxtorem-css
+## 🚀 Quick Start
+
+### PostCSS Config
+
+```js
+// postcss.config.js
+module.exports = {
+  plugins: [
+    require('pxtorem-css')({
+      baseSize: 16,
+      properties: ['*'],
+    }),
+  ],
+};
 ```
 
-## Usage
+### CLI
 
 ```bash
-$ pxtorem [options]
+# Convert a file
+npx pxtorem style.css
 
-Options:
-  -init,--init [type]       Init pxtorem options json (preset: "pxtorem.config.json")
-  -s, --size [type]         Select html size (default: "16", preset: "16")
-  -d, --dir [type...]       Select css directory (default: ["/"], preset: "/")
-  -t, --type [type]         Select css ext type example: .scss (default: ".css", preset: ".css")
-  -i, --ignore [type...]    Ignore css attribute (default: [], preset: [])
-  -r, --replace [type]      For replace file name (default: false, preset: false)
-  -o, --output [type]       Output directory (default: "", preset: "")
-  -in, --include [type...]  For include css file path (default: [], preset: [])
-  -ex, --exclude [type...]  For exclue css file path (default: [], preset: [])
-  -c, --config [type]       For json config file (default: "", preset: "")
-  -h, --help                display help for command
-
+# With options
+npx pxtorem style.css -b 16 -u rem --min-value 2
 ```
 
-### Example
+---
 
-`$ pxtorem` : change all directories css file. <br>
+## 📖 Usage Examples
 
-`$ pxtorem -d public/css` : change all css file inside public/css dir.<br>
+<details>
+<summary><strong>Vite</strong></summary>
 
-`$ pxtorem -d public/css -t .scss` : change all .scss extname file inside public/css dir.<br>
+```js
+// vite.config.js
+import { defineConfig } from 'vite';
+import pxtorem from 'pxtorem-css';
 
-`$ pxtorem -d public/css -t .scss -o public/remcss` : change all .scss extname file inside public/css dir and write file to public/remcss dir.<br>
+export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [
+        pxtorem({
+          baseSize: 16,
+          properties: ['*'],
+        }),
+      ],
+    },
+  },
+});
+```
 
-`$ pxtorem -d public/css -i box-shadow margin-left padding-left` : change all css file inside public/css dir except box-shadow margin-left padding-left attribute px.<br>
+</details>
 
-`$ pxtorem -d public/css -r my/name/rem/.ext` : change all css filename example: style.css to mystylerem.css and you must follow this pattern {your custom text before name}/name/{your custom text after name}/.ext<br>
+<details>
+<summary><strong>Next.js</strong></summary>
 
-`$ pxtorem -c pxtorem.json` : Customize your options with json file in your project folder<br>
+```js
+// postcss.config.js
+module.exports = {
+  plugins: {
+    'pxtorem-css': {
+      baseSize: 16,
+      properties: ['*'],
+    },
+  },
+};
+```
 
-`$ pxtorem -init` : generate pxtorem.config.json (or you can give custom name by passing value after -init) into your project folder<br>
+</details>
 
-### pxtorem.json Example
+<details>
+<summary><strong>Webpack</strong></summary>
 
-```bash
-{
-    "size": "16",
-    "dir": ["public/css"],
-    "type": ".css",
-    "ignore": ["margin", "padding", "box-shadow"],
-    "replace": "{your custom word}/name/{your custom word}/.ext",
-    "output": "",
-    "include": [],
-    "exclude": []
+```js
+// postcss.config.js
+module.exports = {
+  plugins: [
+    require('pxtorem-css')({
+      baseSize: 16,
+      properties: ['*'],
+      minValue: 2,
+    }),
+    require('autoprefixer'),
+  ],
+};
+```
+
+</details>
+
+<details>
+<summary><strong>Node.js Script</strong></summary>
+
+```js
+const fs = require('fs');
+const postcss = require('postcss');
+const pxtorem = require('pxtorem-css');
+
+const css = fs.readFileSync('input.css', 'utf8');
+
+postcss([pxtorem({ baseSize: 16 })])
+  .process(css)
+  .then((result) => {
+    fs.writeFileSync('output.css', result.css);
+  });
+```
+
+</details>
+
+---
+
+## ⚙️ Options
+
+| Option                | Type                   | Default    | Description                                                |
+| --------------------- | ---------------------- | ---------- | ---------------------------------------------------------- |
+| `baseSize`            | `number \| function`   | `16`       | Base font size for conversion                              |
+| `toUnit`              | `string`               | `'rem'`    | Target unit (`rem`, `em`, `vw`, `vh`, `vmin`, `vmax`, `%`) |
+| `fromUnit`            | `string`               | `'px'`     | Source unit to convert                                     |
+| `precision`           | `number`               | `5`        | Decimal precision                                          |
+| `properties`          | `string[]`             | `['*']`    | Properties to convert (supports wildcards)                 |
+| `skipSelectors`       | `(string \| RegExp)[]` | `[]`       | Selectors to skip                                          |
+| `minValue`            | `number`               | `0`        | Skip values below this                                     |
+| `maxValue`            | `number`               | `Infinity` | Skip values above this                                     |
+| `convertMediaQueries` | `boolean`              | `false`    | Convert in media queries                                   |
+| `replaceOriginal`     | `boolean`              | `true`     | Replace vs add fallback                                    |
+| `propertyBaseSize`    | `object`               | `{}`       | Per-property base sizes                                    |
+| `convert`             | `function`             | `null`     | Custom conversion function                                 |
+| `verbose`             | `boolean`              | `false`    | Log conversions                                            |
+
+---
+
+## 🎨 Advanced Examples
+
+### Property Wildcards
+
+```js
+pxtorem({
+  properties: ['font*', '*margin*', '!border*'],
+  // ✓ font-size, font-weight, margin, margin-top
+  // ✗ border, border-width
+});
+```
+
+### Per-Property Base Size
+
+```js
+pxtorem({
+  baseSize: 16,
+  propertyBaseSize: {
+    'font-size': 14,
+    'line-height': 20,
+  },
+});
+```
+
+### Custom Transform
+
+```js
+pxtorem({
+  convert: (px, property, selector) => {
+    // Skip small values
+    if (px < 4) return false;
+
+    // Use CSS variable
+    if (px === 16) return 'var(--base-size)';
+
+    // Round to 0.25rem
+    return Math.round((px / 16) * 4) / 4;
+  },
+});
+```
+
+### Viewport Units (Mobile-First)
+
+```js
+pxtorem({
+  toUnit: 'vw',
+  baseSize: 3.75, // 375px / 100vw
+  properties: ['*'],
+});
+```
+
+---
+
+## 💬 Comment Control
+
+Disable conversion with inline comments:
+
+```css
+.element {
+  font-size: 16px; /* → 1rem */
+  padding: 20px; /* pxtorem-disable-line */ /* → 20px (skipped) */
+
+  /* pxtorem-disable */
+  margin: 32px; /* → 32px (skipped) */
+  border: 1px solid; /* → 1px (skipped) */
+  /* pxtorem-enable */
+
+  width: 100px; /* → 6.25rem */
 }
 ```
 
-## Contribution
+| Comment                           | Effect               |
+| --------------------------------- | -------------------- |
+| `/* pxtorem-disable-line */`      | Skip current line    |
+| `/* pxtorem-disable-next-line */` | Skip next line       |
+| `/* pxtorem-disable */`           | Disable until enable |
+| `/* pxtorem-enable */`            | Re-enable            |
 
-If you want to contribute or report any bug, you welcome
+---
 
-<br>
-Don't forget to give a star 😍
+## 🖥️ CLI Reference
+
+```bash
+pxtorem [options] <input>
+```
+
+| Option                    | Description                       |
+| ------------------------- | --------------------------------- |
+| `-o, --output <path>`     | Output file/directory             |
+| `-b, --base-size <n>`     | Base font size                    |
+| `-u, --to-unit <unit>`    | Target unit                       |
+| `-p, --precision <n>`     | Decimal precision                 |
+| `--properties <list>`     | Comma-separated properties        |
+| `--skip-selectors <list>` | Comma-separated selectors to skip |
+| `--min-value <n>`         | Min px value                      |
+| `--max-value <n>`         | Max px value                      |
+| `--media-queries`         | Convert in media queries          |
+| `--no-replace`            | Add fallback instead of replacing |
+| `-v, --verbose`           | Verbose output                    |
+| `-h, --help`              | Show help                         |
+
+### CLI Examples
+
+```bash
+# Basic conversion
+pxtorem style.css
+
+# Custom options
+pxtorem style.css -b 16 -u rem -p 5 --min-value 2
+
+# Different output
+pxtorem -o dist/styles.css src/styles.css
+
+# Directory conversion
+pxtorem -o dist/css src/css
+
+# Filter properties
+pxtorem style.css --properties "font-size,margin,padding"
+```
+
+---
+
+## 📘 TypeScript
+
+```ts
+import pxtorem, { Options, ConversionReport, TargetUnit } from 'pxtorem-css';
+
+const options: Options = {
+  baseSize: 16,
+  toUnit: 'rem',
+  onConversionComplete: (report: ConversionReport) => {
+    console.log(`Converted: ${report.convertedDeclarations}`);
+  },
+};
+```
+
+---
+
+## 📄 License
+
+MIT © [Rashed Iqbal](https://github.com/iqbal-rashed)
