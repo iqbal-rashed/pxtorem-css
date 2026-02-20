@@ -1,6 +1,6 @@
 {
   "name": "pxtorem-css",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A PostCSS plugin and CLI tool that converts px to rem/em/vw/vh units",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
