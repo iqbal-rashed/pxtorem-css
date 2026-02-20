@@ -4,16 +4,25 @@ export default defineConfig([
   // Main library build
   {
     entry: ['src/index.ts'],
-    format: ['cjs', 'esm'],
+    format: ['esm'],
+    dts: false,
+    clean: true,
+    sourcemap: false,
+    minify: true,
+    splitting: false,
+    cjsInterop: true,
+  },
+  {
+    entry: ['src/index.ts'],
+    format: ['cjs'],
     dts: true,
     clean: true,
     sourcemap: false,
     minify: true,
     splitting: false,
     cjsInterop: true,
-    footer({ format }) {
-      if (format == 'cjs')
-        return { js: 'module.exports = module.exports.default;' };
+    footer() {
+      return { js: 'module.exports = module.exports.default;' };
     },
   },
   // CLI build
