@@ -259,6 +259,26 @@ describe('pxtorem-css', () => {
   });
 
   describe('edge cases', () => {
+    it('should convert px fallback value inside var()', async () => {
+      const input = '.test { font-size: var(--font-size-text, 16px); }';
+      const expected = '.test { font-size: var(--font-size-text, 1rem); }';
+      expect(await run(input, { properties: ['*'] })).toBe(expected);
+    });
+
+    it('should convert nested var() fallback px values', async () => {
+      const input =
+        '.test { font-size: var(--a, var(--b, 16px)); margin: var(--m, 8px); }';
+      const expected =
+        '.test { font-size: var(--a, var(--b, 1rem)); margin: var(--m, 0.5rem); }';
+      expect(await run(input, { properties: ['*'] })).toBe(expected);
+    });
+
+    it('should not convert px text in var() custom property names', async () => {
+      const input = '.test { font-size: var(--font-size-16px, 8px); }';
+      const expected = '.test { font-size: var(--font-size-16px, 0.5rem); }';
+      expect(await run(input, { properties: ['*'] })).toBe(expected);
+    });
+
     it('should not convert values in url()', async () => {
       const input =
         '.test { background: url(image-16px.png); font-size: 16px; }';
